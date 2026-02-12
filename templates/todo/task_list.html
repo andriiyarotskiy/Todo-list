@@ -43,11 +43,14 @@
               </p>
             </div>
             <div>
-              {% if task.completed %}
-                <a href="{% url "todo:toggle-complete" pk=task.id %}" class="btn btn-secondary">Undo</a>
-              {% else %}
-                <a href="{% url "todo:toggle-complete" pk=task.id %}" class="btn btn-success">Complete</a>
-              {% endif %}
+              <form action="{% url "todo:toggle-complete" pk=task.id %}" method="post">
+                {% csrf_token %}
+                {% if task.completed %}
+                  <input type="submit" value="Undo" class="btn btn-secondary">
+                {% else %}
+                  <input type="submit" value="Complete" class="btn btn-success">
+                {% endif %}
+              </form>
             </div>
           </li>
         {% endfor %}

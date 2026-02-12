@@ -1,8 +1,7 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
-from django.views.decorators.http import require_GET
+from django.views.generic.detail import SingleObjectMixin
 
 from todo.forms import TaskForm
 from todo.models import Task, Tag
@@ -27,12 +26,14 @@ class TaskUpdateView(generic.UpdateView):
     success_url = reverse_lazy("todo:task-list")
 
 
-@require_GET
-def toggle_task_complete(request: HttpRequest, pk: int) -> HttpResponse:
-    task = get_object_or_404(Task, pk=pk)
-    task.completed = not task.completed
-    task.save()
-    return redirect("todo:task-list")
+class ToggleTaskComplete(SingleObjectMixin, generic.View):
+    model = Task
+
+    def post(self, request, *args, **kwargs):
+        task = self.get_object()
+        task.completed = not task.completed
+        task.save()
+        return redirect("todo:task-list")
 
 
 class TaskDeleteView(generic.DeleteView):
