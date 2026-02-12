@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}
+  Confirmation
+{% endblock %}
+{% block content %}
+  <h3>
+    Confirmation
+  </h3>
+  <p>
+    Are you sure you want to delete <strong>"{{ object }}"</strong>?
+  </p>
+  <div>
+    <form action="" method="post">
+      {% csrf_token %}
+      <input type="submit" class="btn btn-danger" value="Yes, delete">
+      <a href="{{ view.get_success_url }}" class="btn btn-primary">Cancel</a>
+    </form>
+  </div>
+{% endblock %}

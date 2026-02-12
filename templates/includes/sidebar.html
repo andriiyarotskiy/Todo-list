@@ -1,0 +1,18 @@
+{% block sidebar %}
+  <div class="list-group">
+    {% url "todo:task-list" as task_list %}
+    <a href="{{ task_list }}"
+       class="list-group-item
+        list-group-item-action{% if request.path == task_list %} active{% endif %}"
+    >
+      Home
+    </a>
+    {% url "todo:tag-list" as tag_list %}
+    <a href="{{ tag_list }}"
+       class="list-group-item
+        list-group-item-action{% if request.path == tag_list %} active{% endif %}"
+    >
+      Tags
+    </a>
+  </div>
+{% endblock %}
