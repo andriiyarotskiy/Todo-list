@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class="d-flex justify-content-between align-items-center">
+    TODO list
+    <a href="{% url 'todo:task-create' %}" class="btn btn-primary">Add Task</a>
+  </h1>
+  <div>
+    {% if task_list %}
+      <ul class="list-group list-group-flush mt-5">
+        {% for task in task_list %}
+          <li class="list-group-item p-0 d-flex justify-content-between align-items-center ">
+            <div>
+              <p class="font-weight-bold">
+                {{ task.content }}
+                {% if task.completed %}
+                  <span class="badge badge-success">
+                Done
+              </span>
+                {% else %}
+                  <span class="badge badge-danger">
+                Not Done
+              </span>
+                {% endif %}
+              </p>
+              <p>
+                Created: {{ task.datetime }}
+                {% if task.deadline %}
+                  <span style="color:#853a3a">Deadline: {{ task.deadline }}</span>
+                {% endif %}
+              </p>
+              <p>
+              <span class="text-secondary">
+              {% if task.tags.all %}
+                Tags: {% for tag in task.tags.all %}
+                {{ tag }}{{ forloop.last|yesno:",&#44;"|safe }}
+              {% endfor %}
+              {% endif %}
+
+              </span>
+                <a href="{% url "todo:task-update" pk=task.id %}">Update</a>
+                <a href="{% url "todo:task-delete" pk=task.id %}">Delete</a>
+              </p>
+            </div>
+            <div>
+              <form action="{% url "todo:toggle-complete" pk=task.id %}" method="post">
+                {% csrf_token %}
+                {% if task.completed %}
+                  <input type="submit" value="Undo" class="btn btn-secondary">
+                {% else %}
+                  <input type="submit" value="Complete" class="btn btn-success">
+                {% endif %}
+              </form>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      There are no tasks to do.
+    {% endif %}
+  </div>
+{% endblock %}
